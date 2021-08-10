@@ -5,6 +5,7 @@ const STORAGE_KEY = "TODO_APPS";
  *    {
  *      id: <int>
  *      task: <string>
+ *      authorname: <string>
  *      timestamp: <string>
  *      isCompleted: <boolean>
  *    }
@@ -56,10 +57,11 @@ function updateDataToStorage() {
         saveData();
 }
 
-function composeTodoObject(task, timestamp, isCompleted) {
+function composeTodoObject(task, authorname, timestamp, isCompleted) {
     return {
         id: +new Date(),
         task,
+        authorname,
         timestamp,
         isCompleted
     };

@@ -2,17 +2,21 @@ const UNCOMPLETED_LIST_TODO_ID = "todos";
 const COMPLETED_LIST_TODO_ID = "completed-todos";
 const TODO_ITEMID = "itemId";
 
-function makeTodo(data /* string */, timestamp /* string */, isCompleted /* boolean */) {
+function makeTodo(data /* string */, nameAuthor /* string */,timestamp /* string */, isCompleted /* boolean */) {
 
     const textTitle = document.createElement("h2");
     textTitle.innerText = data;
+
+
+    const authorName = document.createElement("h3");
+    authorName.innerText = nameAuthor;
 
     const textTimestamp = document.createElement("p");
     textTimestamp.innerText = timestamp;
 
     const textContainer = document.createElement("div");
     textContainer.classList.add("inner")
-    textContainer.append(textTitle, textTimestamp);
+    textContainer.append(textTitle, authorName, textTimestamp);
 
     const container = document.createElement("div");
     container.classList.add("item", "shadow")
@@ -63,13 +67,13 @@ function createButton(buttonTypeClass /* string */, eventListener /* Event */) {
 function addTodo() {
     const uncompletedTODOList = document.getElementById(UNCOMPLETED_LIST_TODO_ID);
 
-    const noId = document.getElementById("nomoid").value;
+    // const noId = document.getElementById("nomoid").value;
     const textTodo = document.getElementById("title").value;
     const nameAuthor = document.getElementById("author").value;
     const timestamp = document.getElementById("date").value;
 
-    const todo = makeTodo(noId, textTodo, timestamp, false);
-    const todoObject = composeTodoObject(textTodo, timestamp, false);
+    const todo = makeTodo(textTodo, nameAuthor,  timestamp, false);
+    const todoObject = composeTodoObject(textTodo, nameAuthor, timestamp, false);
     
     todo[TODO_ITEMID] = todoObject.id;
     todos.push(todoObject);
@@ -81,9 +85,10 @@ function addTodo() {
 function addTaskToCompleted(taskElement /* HTMLELement */) {
     const listCompleted = document.getElementById(COMPLETED_LIST_TODO_ID);
     const taskTitle = taskElement.querySelector(".inner > h2").innerText;
+    const authorName = taskElement.querySelector(".inner > h3").innerText;
     const taskTimestamp = taskElement.querySelector(".inner > p").innerText;
 
-    const newTodo = makeTodo(taskTitle, taskTimestamp, true);
+    const newTodo = makeTodo(taskTitle, authorName, taskTimestamp, true);
     
 
     const todo = findTodo(taskElement[TODO_ITEMID]);
@@ -108,9 +113,10 @@ function removeTaskFromCompleted(taskElement /* HTMLELement */) {
 function undoTaskFromCompleted(taskElement /* HTMLELement */) {
     const listUncompleted = document.getElementById(UNCOMPLETED_LIST_TODO_ID);
     const taskTitle = taskElement.querySelector(".inner > h2").innerText;
+    const authorName = taskElement.querySelector(".inner > h3").innerText;
     const taskTimestamp = taskElement.querySelector(".inner > p").innerText;
     
-    const newTodo = makeTodo(taskTitle, taskTimestamp, false);
+    const newTodo = makeTodo(taskTitle, authorName, taskTimestamp, false);
 
     const todo = findTodo(taskElement[TODO_ITEMID]);
     todo.isCompleted = false;
@@ -127,7 +133,7 @@ function refreshDataFromTodos() {
     let listCompleted = document.getElementById(COMPLETED_LIST_TODO_ID);
 
     for(todo of todos){
-        const newTodo = makeTodo(todo.task, todo.timestamp, todo.isCompleted);
+        const newTodo = makeTodo(todo.task, todo.authorName, todo.timestamp, todo.isCompleted);
         newTodo[TODO_ITEMID] = todo.id;
 
         if(todo.isCompleted){
